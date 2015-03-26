@@ -39,8 +39,8 @@ object Main {
     println("Scanning")
 
     try
-//      recursiveScan()
-          fastScan
+      //      recursiveScan()
+      fastScan
     catch {
       case a: InterruptedException => println("Finished!")
     }
@@ -49,23 +49,27 @@ object Main {
 
     val toFile = new BufferedWriter(new FileWriter("data-monthly.csv"))
 
+
+
     /* Writing header */
-    data.keySet foreach ((login) => {
-      toFile write ','
-      toFile write login
-    })
-    toFile write '\n'
+    //    data.keySet foreach ((login) => {
+    //      toFile write ','
+    //      toFile write login
+    //    })
+    //    toFile write '\n'
+
+    println(how_much)
 
     /* Writing data */
-    dates foreach ((date) => {
-      toFile write date
-      nicks foreach ((nick) => {
-        toFile write ','
-        val wat = data.get(nick).getOrDefault(date, 0)
-        toFile write (if (wat == 0) "" else wat.toString)
-      })
-      toFile write '\n'
-    })
+    //    dates foreach ((date) => {
+    //      toFile write date
+    //      nicks foreach ((nick) => {
+    //        toFile write ','
+    //        val wat = data.get(nick).getOrDefault(date, 0)
+    //        toFile write (if (wat == 0) "" else wat.toString)
+    //      })
+    //      toFile write '\n'
+    //    })
 
     toFile close()
 
@@ -161,34 +165,46 @@ object Main {
   //  val visited: util.Set[String] = new util.HashSet[String]()
   //  val notVisited: util.Set[String] = new util.HashSet[String]()
 
-  val data = new util.HashMap[String, util.HashMap[String, Int]]()
-  val dates = new util.HashSet[String]()
-  val nicks = new util.HashSet[String]()
+  //  val data = new util.HashMap[String, util.HashMap[String, Int]]()
+  //  val dates = new util.HashSet[String]()
+  //  val nicks = new util.HashSet[String]()
 
   val sum = new BiFunction[Int, Int, Int] {
     override def apply(t: Int, u: Int): Int = t + u
   }
+
+  var how_much = 0
 
   def scanComment(comment: Comment): Unit = {
     if (comment.deleted) return
     val nick = comment.author.login
     val date = DateStamp format comment.date.getTime
 
-    dates add date
-    nicks add nick
 
-    val userdata = {
-      val ifNull = data get nick
-      if (ifNull == null) {
-        println(nick)
-        val map = new util.HashMap[String, Int]()
-        data.put(nick, map)
-        map
-      } else
-        ifNull
+    if (nick.equals("greatjiraiya")) {
+      var i = 0
+      while (i != -1) {
+        i = comment.text.indexOf("<span class=\"spoiler\">", i + 1)
+        if (i != -1)
+          how_much += 1
+      }
     }
 
-    userdata merge(date, 1, sum)
+    //    dates add date
+    //    nicks add nick
+
+    //    val userdata = {
+    //      val ifNull = data get nick
+    //      if (ifNull == null) {
+    //        println(nick)
+    //        val map = new util.HashMap[String, Int]()
+    //        data.put(nick, map)
+    //        map
+    //      } else
+    //        ifNull
+    //    }
+    //
+    //    userdata merge(date, 1, sum)
 
   }
 
